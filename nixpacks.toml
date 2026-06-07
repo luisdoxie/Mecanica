@@ -28,4 +28,4 @@ cmds = [
 ]
 
 [start]
-cmd = "php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && frankenphp run --config /app/Caddyfile"
+cmd = "php artisan config:clear && php artisan cache:clear && php artisan migrate:fresh --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && frankenphp run --config /app/Caddyfile"
