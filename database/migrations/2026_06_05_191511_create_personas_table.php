@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,15 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('personas')) {
-            Schema::create('personas', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        // personas ya se crea en 0001_01_01_000000 junto con users y sessions
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('personas');
+        //
     }
 };

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('config_taller')) {
-            Schema::create('config_taller', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('config_taller', function (Blueprint $table) {
+            $table->id();
+            $table->string('clave')->unique();
+            $table->text('valor')->nullable();
+            $table->text('descripcion')->nullable();
+            $table->string('tipo')->default('string');
+            $table->timestamps();
+        });
     }
 
     public function down(): void

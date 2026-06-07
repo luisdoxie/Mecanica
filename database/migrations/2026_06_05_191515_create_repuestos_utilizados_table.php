@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('repuestos_utilizados')) {
-            Schema::create('repuestos_utilizados', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('repuestos_utilizados', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('orden_id')->constrained('ordenes_trabajo')->cascadeOnDelete();
+            $table->string('nombre');
+            $table->string('origen')->nullable();
+            $table->string('calidad_observada')->nullable();
+            $table->decimal('costo', 10, 2)->default(0);
+            $table->integer('cantidad')->default(1);
+            $table->timestamps();
+        });
     }
 
     public function down(): void

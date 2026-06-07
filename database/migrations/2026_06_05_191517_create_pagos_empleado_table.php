@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('pagos_empleado')) {
-            Schema::create('pagos_empleado', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('pagos_empleado', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empleado_id')->constrained('empleados')->cascadeOnDelete();
+            $table->string('periodo');
+            $table->decimal('monto', 10, 2);
+            $table->date('fecha_pago');
+            $table->text('observacion')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void

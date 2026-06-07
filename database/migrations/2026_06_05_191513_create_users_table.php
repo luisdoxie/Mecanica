@@ -1,22 +1,10 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
+// users, personas, sessions ya se crean en 0001_01_01_000000
 return new class extends Migration
 {
-    public function up(): void
-    {
-        if (!Schema::hasTable('users')) {
-            Schema::create('users', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('users');
-    }
+    public function up(): void {}
+    public function down(): void {}
 };

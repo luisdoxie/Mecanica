@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('categorias_gasto')) {
-            Schema::create('categorias_gasto', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('categorias_gasto', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->string('tipo')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void

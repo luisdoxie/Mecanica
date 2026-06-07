@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('vehiculos')) {
-            Schema::create('vehiculos', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('vehiculos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cliente_id')->constrained('clientes')->cascadeOnDelete();
+            $table->string('placa')->unique();
+            $table->string('marca');
+            $table->string('modelo');
+            $table->integer('anio');
+            $table->integer('km_actual')->default(0);
+            $table->string('color')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void

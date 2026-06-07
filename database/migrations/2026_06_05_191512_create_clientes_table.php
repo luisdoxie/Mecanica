@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,11 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('clientes')) {
-            Schema::create('clientes', function (Blueprint $table) {
-                // Table already exists in the database
-            });
-        }
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('persona_id')->constrained('personas')->cascadeOnDelete();
+            $table->string('pin_acceso')->nullable();
+            $table->string('password_hash')->nullable();
+            $table->boolean('puede_login')->default(false);
+            $table->timestamps();
+        });
     }
 
     public function down(): void
