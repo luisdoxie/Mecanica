@@ -43,6 +43,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:SUPER_ADMIN'])
     // Empleados
     Route::resource('empleados', EmpleadoController::class);
     Route::patch('empleados/{empleado}/desactivar', [EmpleadoController::class, 'desactivar'])->name('empleados.desactivar');
+    Route::patch('empleados/{empleado}/reactivar', [EmpleadoController::class, 'reactivar'])->name('empleados.reactivar');
 
     // Usuarios
     Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -79,6 +80,7 @@ Route::prefix('gerente')->name('gerente.')->middleware(['auth', 'role:GERENTE,SU
     // Empleados
     Route::resource('empleados', EmpleadoController::class);
     Route::patch('empleados/{empleado}/desactivar', [EmpleadoController::class, 'desactivar'])->name('empleados.desactivar');
+    Route::patch('empleados/{empleado}/reactivar', [EmpleadoController::class, 'reactivar'])->name('empleados.reactivar');
 
     // Órdenes de trabajo
     Route::resource('ordenes', GerenteOrdenController::class)->except(['edit', 'update'])->parameters(['ordenes' => 'orden']);

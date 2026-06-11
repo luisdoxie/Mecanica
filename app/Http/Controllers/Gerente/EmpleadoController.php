@@ -28,7 +28,6 @@ class EmpleadoController extends Controller
         $query = Empleado::with(['persona', 'especialidades'])
             ->join('personas', 'empleados.persona_id', '=', 'personas.id')
             ->select('empleados.*')
-            ->where('empleados.activo', true)
             ->whereNotIn('empleados.persona_id', function ($q) {
                 $q->select('persona_id')->from('users')->whereIn('rol', ['GERENTE', 'SUPER_ADMIN'])->whereNotNull('persona_id');
             });
@@ -136,15 +135,28 @@ class EmpleadoController extends Controller
     {
         $empleado->update(['activo' => false]);
 
-        // También desactivar el usuario vinculado
         if ($empleado->persona_id) {
             \App\Models\User::where('persona_id', $empleado->persona_id)->update(['activo' => false]);
         }
 
         ActivityLogger::log('Empleado desactivado', class_basename(__CLASS__));
 
-        return redirect()->route($this->prefixRoute('empleados.index'))
-            ->with('success', 'Empleado desactivado correctamente.');
+        return redirect()->route($this->prefixRoute('empleados.show'), $empleado)
+            ->with('success', 'Empleado desactivado. Puedes reactivarlo cuando sea necesario.');
+    }
+
+    public function reactivar(Empleado $empleado)
+    {
+        $empleado->update(['activo' => true]);
+
+        if ($empleado->persona_id) {
+            \App\Models\User::where('persona_id', $empleado->persona_id)->update(['activo' => true]);
+        }
+
+        ActivityLogger::log('Empleado reactivado', class_basename(__CLASS__));
+
+        return redirect()->route($this->prefixRoute('empleados.show'), $empleado)
+            ->with('success', 'Empleado reactivado correctamente. Ya puede iniciar sesión.');
     }
 
     public function destroy(Empleado $empleado)

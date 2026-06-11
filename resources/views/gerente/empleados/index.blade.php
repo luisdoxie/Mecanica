@@ -34,10 +34,17 @@
         </thead>
         <tbody class="divide-y divide-gray-50">
             @forelse($empleados as $empleado)
-            <tr class="hover:bg-gray-50 transition">
+            <tr class="hover:bg-gray-50 transition {{ !$empleado->activo ? 'opacity-60' : '' }}">
                 <td class="px-4 py-3">
-                    <p class="font-semibold text-gray-800">{{ $empleado->persona->nombre }} {{ $empleado->persona->apellido }}</p>
-                    <p class="text-gray-400 text-xs">{{ $empleado->persona->ci }} · {{ $empleado->persona->telefono }}</p>
+                    <div class="flex items-center gap-2">
+                        <div>
+                            <p class="font-semibold text-gray-800">{{ $empleado->persona->nombre }} {{ $empleado->persona->apellido }}</p>
+                            <p class="text-gray-400 text-xs">{{ $empleado->persona->ci }} · {{ $empleado->persona->telefono }}</p>
+                        </div>
+                        @if(!$empleado->activo)
+                            <span class="px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs font-semibold">Inactivo</span>
+                        @endif
+                    </div>
                 </td>
                 <td class="px-4 py-3 text-gray-600">{{ $empleado->cargo }}</td>
                 <td class="px-4 py-3">
@@ -51,17 +58,24 @@
                 <td class="px-4 py-3 text-right space-x-2">
                     <a href="{{ route('gerente.empleados.show', $empleado) }}" class="text-teal-600 hover:text-teal-800 text-xs font-medium">Ver</a>
                     <a href="{{ route('gerente.empleados.edit', $empleado) }}" class="text-amber-600 hover:text-amber-800 text-xs font-medium">Editar</a>
+                    @if($empleado->activo)
                     <form method="POST" action="{{ route('gerente.empleados.desactivar', $empleado) }}" class="inline"
                           onsubmit="return confirm('¿Desactivar a este empleado?')">
                         @csrf @method('PATCH')
                         <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-medium">Desactivar</button>
                     </form>
+                    @else
+                    <form method="POST" action="{{ route('gerente.empleados.reactivar', $empleado) }}" class="inline">
+                        @csrf @method('PATCH')
+                        <button type="submit" class="text-green-600 hover:text-green-800 text-xs font-medium">Reactivar</button>
+                    </form>
+                    @endif
                 </td>
             </tr>
             @empty
             <tr>
                 <td colspan="5" class="px-4 py-10 text-center text-gray-400">
-                    No se encontraron empleados activos{{ $buscar ? " para \"{$buscar}\"" : '' }}.
+                    No se encontraron empleados{{ $buscar ? " para \"{$buscar}\"" : '' }}.
                 </td>
             </tr>
             @endforelse
