@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 
 class ComisionApiController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        if (!in_array($request->user()->rol, ['GERENTE', 'SUPER_ADMIN'])) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $pagos = PagoEmpleado::with('empleado.persona')->latest('fecha_pago')->limit(100)->get();
 
         return response()->json($pagos->map(fn($p) => [
@@ -25,6 +29,10 @@ class ComisionApiController extends Controller
 
     public function store(Request $request)
     {
+        if (!in_array($request->user()->rol, ['GERENTE', 'SUPER_ADMIN'])) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate([
             'empleado_id' => 'required|exists:empleados,id',
             'periodo'     => 'required|string|max:20',

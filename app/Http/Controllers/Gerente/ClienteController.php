@@ -98,18 +98,29 @@ class ClienteController extends Controller
     public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
         DB::transaction(function () use ($request, $cliente) {
+            $nuevoEmail = $request->email;
+
             $cliente->persona->update([
                 'nombre'    => $request->nombre,
                 'apellido'  => $request->apellido,
                 'ci'        => $request->ci,
                 'telefono'  => $request->telefono,
-                'email'     => $request->email,
+                'email'     => $nuevoEmail,
                 'direccion' => $request->direccion,
             ]);
 
             $cliente->update([
                 'puede_login' => $request->boolean('puede_login'),
             ]);
+
+            // Sincronizar email en el User si cambió
+            $user = User::where('persona_id', $cliente->persona_id)->first();
+            if ($user && $nuevoEmail && $user->email !== $nuevoEmail) {
+                $user->update([
+                    'email' => $nuevoEmail,
+                    'name'  => $request->nombre . ' ' . $request->apellido,
+                ]);
+            }
         });
 
         ActivityLogger::log('Cliente actualizado', class_basename(__CLASS__));

@@ -14,10 +14,23 @@ use Illuminate\Support\Facades\DB;
 
 class OrdenApiController extends Controller
 {
+    private function _empleadoActual(Request $request): ?Empleado
+    {
+        return Empleado::where('persona_id', $request->user()->persona_id)->first();
+    }
+
+    private function _autorizarOrden(OrdenTrabajo $orden, Request $request): bool
+    {
+        $user = $request->user();
+        if (in_array($user->rol, ['GERENTE', 'SUPER_ADMIN'])) return true;
+        $empleado = $this->_empleadoActual($request);
+        return $empleado && $orden->empleado_id === $empleado->id;
+    }
+
     public function index(Request $request)
     {
         $user     = $request->user();
-        $empleado = Empleado::where('persona_id', $user->persona_id)->first();
+        $empleado = $this->_empleadoActual($request);
 
         $query = OrdenTrabajo::with(['vehiculo.cliente.persona', 'empleado.persona'])->latest();
 
@@ -32,11 +45,11 @@ class OrdenApiController extends Controller
         return response()->json($query->limit(50)->get()->map(fn($o) => [
             'id'           => $o->id,
             'estado'       => $o->estado,
-            'placa'        => $o->vehiculo->placa,
-            'marca'        => $o->vehiculo->marca,
-            'modelo'       => $o->vehiculo->modelo,
-            'cliente'      => $o->vehiculo->cliente->persona->nombre . ' ' . $o->vehiculo->cliente->persona->apellido,
-            'mecanico'     => $o->empleado ? $o->empleado->persona->nombre . ' ' . $o->empleado->persona->apellido : null,
+            'placa'        => $o->vehiculo?->placa ?? '—',
+            'marca'        => $o->vehiculo?->marca ?? '—',
+            'modelo'       => $o->vehiculo?->modelo ?? '—',
+            'cliente'      => ($o->vehiculo?->cliente?->persona?->nombre ?? '') . ' ' . ($o->vehiculo?->cliente?->persona?->apellido ?? ''),
+            'mecanico'     => $o->empleado ? $o->empleado->persona?->nombre . ' ' . $o->empleado->persona?->apellido : null,
             'costo_total'  => $o->costo_total,
             'fecha_ingreso'=> $o->fecha_ingreso?->format('d/m/Y H:i'),
             'descripcion'  => $o->descripcion_problema,
@@ -53,15 +66,15 @@ class OrdenApiController extends Controller
         return response()->json($ordenes->map(fn($o) => [
             'id'       => $o->id,
             'estado'   => $o->estado,
-            'placa'    => $o->vehiculo->placa,
-            'marca'    => $o->vehiculo->marca,
-            'modelo'   => $o->vehiculo->modelo,
-            'color'    => $o->vehiculo->color,
-            'anio'     => $o->vehiculo->anio,
-            'cliente'  => $o->vehiculo->cliente->persona->nombre . ' ' . $o->vehiculo->cliente->persona->apellido,
-            'telefono' => $o->vehiculo->cliente->persona->telefono,
+            'placa'    => $o->vehiculo?->placa ?? '—',
+            'marca'    => $o->vehiculo?->marca ?? '—',
+            'modelo'   => $o->vehiculo?->modelo ?? '—',
+            'color'    => $o->vehiculo?->color,
+            'anio'     => $o->vehiculo?->anio,
+            'cliente'  => ($o->vehiculo?->cliente?->persona?->nombre ?? '') . ' ' . ($o->vehiculo?->cliente?->persona?->apellido ?? ''),
+            'telefono' => $o->vehiculo?->cliente?->persona?->telefono,
             'mecanico' => $o->empleado
-                ? $o->empleado->persona->nombre . ' ' . $o->empleado->persona->apellido
+                ? $o->empleado->persona?->nombre . ' ' . $o->empleado->persona?->apellido
                 : null,
             'fecha'    => $o->created_at?->format('d/m/Y'),
         ]));
@@ -78,10 +91,10 @@ class OrdenApiController extends Controller
         return response()->json($ordenes->map(fn($o) => [
             'id'           => $o->id,
             'estado'       => $o->estado,
-            'placa'        => $o->vehiculo->placa,
-            'marca'        => $o->vehiculo->marca,
-            'modelo'       => $o->vehiculo->modelo,
-            'cliente'      => $o->vehiculo->cliente->persona->nombre . ' ' . $o->vehiculo->cliente->persona->apellido,
+            'placa'        => $o->vehiculo?->placa ?? '—',
+            'marca'        => $o->vehiculo?->marca ?? '—',
+            'modelo'       => $o->vehiculo?->modelo ?? '—',
+            'cliente'      => ($o->vehiculo?->cliente?->persona?->nombre ?? '') . ' ' . ($o->vehiculo?->cliente?->persona?->apellido ?? ''),
             'descripcion'  => $o->descripcion_problema,
             'fecha_ingreso'=> $o->fecha_ingreso?->format('d/m/Y H:i'),
         ]));
@@ -125,24 +138,28 @@ class OrdenApiController extends Controller
         return response()->json(['message' => 'Orden creada.', 'id' => $orden->id], 201);
     }
 
-    public function show(OrdenTrabajo $orden)
+    public function show(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $orden->load(['vehiculo.cliente.persona', 'empleado.persona', 'servicios', 'repuestos', 'imagenes', 'historialEstados']);
 
         return response()->json([
             'id'           => $orden->id,
             'estado'       => $orden->estado,
             'siguiente'    => $orden->siguienteEstado(),
-            'placa'        => $orden->vehiculo->placa,
-            'marca'        => $orden->vehiculo->marca,
-            'modelo'       => $orden->vehiculo->modelo,
-            'anio'         => $orden->vehiculo->anio,
-            'color'        => $orden->vehiculo->color,
-            'vehiculo_id'  => $orden->vehiculo->id,
+            'placa'        => $orden->vehiculo?->placa ?? '—',
+            'marca'        => $orden->vehiculo?->marca ?? '—',
+            'modelo'       => $orden->vehiculo?->modelo ?? '—',
+            'anio'         => $orden->vehiculo?->anio,
+            'color'        => $orden->vehiculo?->color,
+            'vehiculo_id'  => $orden->vehiculo?->id,
             'cliente'      => [
-                'nombre'   => $orden->vehiculo->cliente->persona->nombre,
-                'apellido' => $orden->vehiculo->cliente->persona->apellido,
-                'telefono' => $orden->vehiculo->cliente->persona->telefono,
+                'nombre'   => $orden->vehiculo?->cliente?->persona?->nombre ?? '—',
+                'apellido' => $orden->vehiculo?->cliente?->persona?->apellido ?? '—',
+                'telefono' => $orden->vehiculo?->cliente?->persona?->telefono,
             ],
             'mecanico'     => $orden->empleado ? [
                 'nombre'   => $orden->empleado->persona->nombre,
@@ -181,6 +198,10 @@ class OrdenApiController extends Controller
 
     public function cambiarEstado(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate(['nota' => 'nullable|string|max:500']);
 
         $siguiente = $orden->siguienteEstado();
@@ -188,7 +209,7 @@ class OrdenApiController extends Controller
             return response()->json(['message' => 'La orden ya está en el estado final.'], 422);
         }
 
-        $empleado = Empleado::where('persona_id', $request->user()->persona_id)->first();
+        $empleado = $this->_empleadoActual($request);
 
         DB::transaction(function () use ($orden, $siguiente, $request, $empleado) {
             HistorialEstado::create([
@@ -213,7 +234,7 @@ class OrdenApiController extends Controller
             return response()->json(['message' => 'La orden ya tiene mecánico asignado.'], 422);
         }
 
-        $empleado = Empleado::where('persona_id', $request->user()->persona_id)->first();
+        $empleado = $this->_empleadoActual($request);
         if (!$empleado) {
             return response()->json(['message' => 'No tienes perfil de empleado.'], 422);
         }
@@ -223,8 +244,19 @@ class OrdenApiController extends Controller
         return response()->json(['message' => 'Te has asignado a la orden.']);
     }
 
+    private function _recalcularCosto(OrdenTrabajo $orden): void
+    {
+        $costoServicios = DB::table('orden_servicio')->where('orden_id', $orden->id)->sum('precio_aplicado');
+        $costoRepuestos = $orden->repuestos()->selectRaw('SUM(costo * cantidad) as total')->value('total') ?? 0;
+        $orden->update(['costo_total' => $costoServicios + $costoRepuestos]);
+    }
+
     public function agregarServicio(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate([
             'servicio_id'    => 'required|exists:servicios,id',
             'precio_aplicado'=> 'required|numeric|min:0',
@@ -236,28 +268,32 @@ class OrdenApiController extends Controller
             'observaciones'   => $request->observaciones,
         ]);
 
-        $total = DB::table('orden_servicio')->where('orden_id', $orden->id)->sum('precio_aplicado')
-               + $orden->repuestos()->sum('costo');
-        $orden->update(['costo_total' => $total]);
+        $this->_recalcularCosto($orden);
 
         return response()->json(['message' => 'Servicio agregado.']);
     }
 
     public function quitarServicio(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate(['servicio_id' => 'required|exists:servicios,id']);
 
         $orden->servicios()->detach($request->servicio_id);
 
-        $total = DB::table('orden_servicio')->where('orden_id', $orden->id)->sum('precio_aplicado')
-               + $orden->repuestos()->sum('costo');
-        $orden->update(['costo_total' => $total]);
+        $this->_recalcularCosto($orden);
 
         return response()->json(['message' => 'Servicio quitado.']);
     }
 
     public function agregarRepuesto(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate([
             'nombre'             => 'required|string|max:150',
             'origen'             => 'required|in:TALLER,CLIENTE',
@@ -275,30 +311,34 @@ class OrdenApiController extends Controller
             'calidad_observada'  => $request->calidad_observada,
         ]);
 
-        $total = DB::table('orden_servicio')->where('orden_id', $orden->id)->sum('precio_aplicado')
-               + $orden->repuestos()->sum('costo');
-        $orden->update(['costo_total' => $total]);
+        $this->_recalcularCosto($orden);
 
         return response()->json(['message' => 'Repuesto agregado.']);
     }
 
-    public function eliminarRepuesto(OrdenTrabajo $orden, RepuestoUtilizado $repuesto)
+    public function eliminarRepuesto(Request $request, OrdenTrabajo $orden, RepuestoUtilizado $repuesto)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         if ($repuesto->orden_id !== $orden->id) {
             return response()->json(['message' => 'Repuesto no pertenece a esta orden.'], 422);
         }
 
         $repuesto->delete();
 
-        $total = DB::table('orden_servicio')->where('orden_id', $orden->id)->sum('precio_aplicado')
-               + $orden->repuestos()->sum('costo');
-        $orden->update(['costo_total' => $total]);
+        $this->_recalcularCosto($orden);
 
         return response()->json(['message' => 'Repuesto eliminado.']);
     }
 
     public function subirFoto(Request $request, OrdenTrabajo $orden)
     {
+        if (!$this->_autorizarOrden($orden, $request)) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate([
             'foto' => 'required|image|max:5120',
             'tipo' => 'required|in:RECEPCION,DAÑO,REPUESTO,ENTREGA',
@@ -322,12 +362,16 @@ class OrdenApiController extends Controller
             return response()->json(['url' => $imagen->cloudinary_url, 'tipo' => $imagen->tipo]);
         } catch (\Exception $e) {
             \Log::error('Cloudinary upload error: ' . $e->getMessage());
-            return response()->json(['message' => 'Error al subir foto: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'No se pudo subir la foto. Intenta de nuevo.'], 500);
         }
     }
 
-    public function destroy(OrdenTrabajo $orden)
+    public function destroy(Request $request, OrdenTrabajo $orden)
     {
+        if (!in_array($request->user()->rol, ['GERENTE', 'SUPER_ADMIN'])) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $orden->delete();
         return response()->json(['message' => 'Orden eliminada.']);
     }

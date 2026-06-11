@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 
 class GastoApiController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        if (!in_array($request->user()->rol, ['GERENTE', 'SUPER_ADMIN'])) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $gastos = Gasto::with('categoria')->latest('fecha')->limit(100)->get();
 
         return response()->json($gastos->map(fn($g) => [
@@ -24,6 +28,10 @@ class GastoApiController extends Controller
 
     public function store(Request $request)
     {
+        if (!in_array($request->user()->rol, ['GERENTE', 'SUPER_ADMIN'])) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
         $request->validate([
             'categoria_id'  => 'required|exists:categorias_gasto,id',
             'descripcion'   => 'required|string|max:255',

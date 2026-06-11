@@ -1,4 +1,4 @@
-@extends('layouts.cliente')
+﻿@extends('layouts.cliente')
 @section('title', 'Mi Vehículo')
 
 @section('content')
@@ -254,7 +254,7 @@ $nombreCliente = explode(' ', Auth::user()->name)[0];
     </div>
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
         @foreach($fotos as $foto)
-        <a href="{{ $foto->cloudinary_url }}" target="_blank" class="group relative aspect-square rounded-xl overflow-hidden">
+        <a href="{{ $foto->cloudinary_url }}" target="_blank" rel="noopener noreferrer" class="group relative aspect-square rounded-xl overflow-hidden">
             <img src="{{ $foto->cloudinary_url }}"
                 class="w-full h-full object-cover transition-all duration-300 group-hover:scale-110">
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
@@ -334,3 +334,4 @@ $nombreCliente = explode(' ', Auth::user()->name)[0];
 @endif
 
 @endsection
+

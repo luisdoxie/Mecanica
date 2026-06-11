@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -160,7 +160,7 @@
                                     <p class="text-gray-500 mb-2">Fotos</p>
                                     <div class="flex flex-wrap gap-2">
                                         @foreach($resultado['fotos'] as $foto)
-                                        <a href="{{ $foto->cloudinary_url }}" target="_blank">
+                                        <a href="{{ $foto->cloudinary_url }}" target="_blank" rel="noopener noreferrer">
                                             <img src="{{ $foto->cloudinary_url }}" class="w-20 h-20 object-cover rounded-lg border border-gray-600 hover:opacity-90 transition">
                                         </a>
                                         @endforeach
@@ -271,3 +271,4 @@
 
 </body>
 </html>
+

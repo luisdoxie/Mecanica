@@ -1,4 +1,4 @@
-@extends('layouts.mecanico')
+﻿@extends('layouts.mecanico')
 
 @section('title', 'Mi Panel')
 @section('header', 'Mi Panel de Trabajo')
@@ -173,7 +173,7 @@
     </div>
     <div class="p-4 grid grid-cols-3 sm:grid-cols-6 gap-3">
         @foreach($ultimasFotos as $foto)
-        <a href="{{ $foto->cloudinary_url }}" target="_blank"
+        <a href="{{ $foto->cloudinary_url }}" target="_blank" rel="noopener noreferrer"
             class="group relative aspect-square rounded-xl overflow-hidden border border-gray-100">
             <img src="{{ $foto->cloudinary_url }}" alt="{{ $foto->tipo }}"
                 class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
@@ -232,3 +232,4 @@
 @endif
 
 @endsection
+

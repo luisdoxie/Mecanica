@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+﻿@extends('layouts.gerente')
 @section('title', 'Gastos')
 @section('header', 'Registro de Gastos')
 
@@ -64,7 +64,7 @@
                 <td class="px-4 py-3 text-right font-bold text-red-600">Bs. {{ number_format($g->monto, 2) }}</td>
                 <td class="px-4 py-3 text-center">
                     @if($g->comprobante_url)
-                    <a href="{{ $g->comprobante_url }}" target="_blank" class="text-teal-600 hover:text-teal-800 text-xs">Ver 📎</a>
+                    <a href="{{ $g->comprobante_url }}" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 text-xs">Ver 📎</a>
                     @else
                     <span class="text-gray-300 text-xs">—</span>
                     @endif
@@ -80,3 +80,4 @@
     @endif
 </div>
 @endsection
+

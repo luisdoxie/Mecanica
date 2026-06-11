@@ -11,7 +11,7 @@
         return {
             buscar: '', abierto: false,
             selId: '{{ old('vehiculo_id', '') }}',
-            selNombre: '{{ addslashes(old('vehiculo_id') ? (($vehiculos->firstWhere('id', old('vehiculo_id'))?->placa ?? '') . ' — ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->marca ?? '') . ' ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->modelo ?? '')) : '') }}',
+            selNombre: {{ json_encode(old('vehiculo_id') ? (($vehiculos->firstWhere('id', old('vehiculo_id'))?->placa ?? '') . ' — ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->marca ?? '') . ' ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->modelo ?? '')) : '') }},
             lista: _vehiculosOrden,
             get filtrados() {
                 if (!this.buscar) return this.lista;
@@ -26,7 +26,7 @@
         return {
             buscar: '', abierto: false,
             selId: '{{ old('empleado_id', '') }}',
-            selNombre: '{{ addslashes(old('empleado_id') ? (($empleados->firstWhere('id', old('empleado_id'))?->persona->apellido ?? '') . ', ' . ($empleados->firstWhere('id', old('empleado_id'))?->persona->nombre ?? '')) : '') }}',
+            selNombre: {{ json_encode(old('empleado_id') ? (($empleados->firstWhere('id', old('empleado_id'))?->persona->apellido ?? '') . ', ' . ($empleados->firstWhere('id', old('empleado_id'))?->persona->nombre ?? '')) : '') }},
             lista: _empleadosOrden,
             get filtrados() {
                 if (!this.buscar) return this.lista;

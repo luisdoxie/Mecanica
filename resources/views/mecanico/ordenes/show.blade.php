@@ -1,4 +1,4 @@
-@extends('layouts.mecanico')
+﻿@extends('layouts.mecanico')
 @section('title', 'Orden #' . $orden->id)
 @section('header', 'Orden #' . $orden->id)
 
@@ -149,7 +149,7 @@ $idxActual = array_search($orden->estado, $estados);
                         <div class="relative group">
                             <img src="{{ $img->cloudinary_url }}" alt="{{ $img->descripcion }}"
                                 class="w-24 h-24 object-cover rounded-lg border border-gray-200 cursor-pointer"
-                                onclick="window.open('{{ $img->cloudinary_url }}', '_blank')">
+                                data-url="{{ $img->cloudinary_url }}" onclick="window.open(this.dataset.url, '_blank', 'noopener,noreferrer')">
                             <form method="POST" action="{{ route('mecanico.ordenes.fotos.destroy', [$orden, $img]) }}"
                                   onsubmit="return confirm('¿Eliminar?')">
                                 @csrf @method('DELETE')
@@ -211,3 +211,4 @@ $idxActual = array_search($orden->estado, $estados);
     </div>
 </div>
 @endsection
+

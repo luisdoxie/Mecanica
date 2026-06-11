@@ -39,7 +39,7 @@
                 </div>
                 <div class="border-t pt-3">
                     <dt class="text-gray-400">PIN de acceso</dt>
-                    <dd><code class="bg-amber-50 px-2 py-0.5 rounded font-mono text-amber-700 text-base tracking-widest">{{ $cliente->pin_acceso }}</code></dd>
+                    <dd class="text-xs text-gray-400 italic">Se entrega al cliente al momento de activar el acceso web.</dd>
                 </div>
                 <div>
                     <dt class="text-gray-400 mb-1">Acceso web</dt>

@@ -16,7 +16,7 @@
         return {
             buscar: '', abierto: false,
             selId: '{{ $oldVId }}',
-            selNombre: '{{ addslashes($oldVLabel) }}',
+            selNombre: {{ json_encode($oldVLabel) }},
             lista: _vehiculosMecanico,
             get filtrados() {
                 if (!this.buscar) return this.lista;

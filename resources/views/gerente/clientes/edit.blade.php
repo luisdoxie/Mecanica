@@ -29,7 +29,7 @@
                         class="w-4 h-4 accent-teal-600">
                     <span class="text-sm text-gray-700">Permitir acceso web</span>
                 </label>
-                <p class="text-xs text-gray-500 ml-7">PIN actual: <code class="bg-gray-100 px-1.5 rounded font-mono text-amber-700">{{ $cliente->pin_acceso }}</code></p>
+                <p class="text-xs text-gray-500 ml-7">El PIN se entrega al cliente cuando se activa el acceso.</p>
             </div>
 
             <div class="flex gap-3 pt-2">

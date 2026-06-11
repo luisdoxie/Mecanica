@@ -48,6 +48,15 @@ class OrdenTrabajoController extends Controller
 
     public function show(OrdenTrabajo $orden)
     {
+        $empleado = auth()->user()->persona_id
+            ? Empleado::where('persona_id', auth()->user()->persona_id)->first()
+            : null;
+
+        // Mecánico solo puede ver sus propias órdenes
+        if (auth()->user()->rol === 'MECANICO' && $empleado && $orden->empleado_id !== $empleado->id) {
+            abort(403);
+        }
+
         $orden->load([
             'vehiculo.cliente.persona',
             'empleado.persona',
