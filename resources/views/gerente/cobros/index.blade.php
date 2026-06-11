@@ -42,31 +42,34 @@ $badgePago = [
 
 {{-- Header con filtros y búsqueda --}}
 <form method="GET" class="flex flex-wrap gap-3 items-end mb-4">
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
         <select name="estado" onchange="this.form.submit()"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+            class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
             <option value="">Todos</option>
             @foreach(['PENDIENTE','PARCIAL','PAGADO','FIADO'] as $e)
             <option value="{{ $e }}" {{ ($filtros['estado'] ?? '') === $e ? 'selected' : '' }}>{{ $e }}</option>
             @endforeach
         </select>
     </div>
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs font-medium text-gray-500 mb-1">Buscar cliente / placa</label>
         <input type="text" name="buscar" value="{{ $filtros['buscar'] ?? '' }}" placeholder="Nombre o placa..."
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 w-48">
+            class="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
     </div>
-    <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
-    <a href="{{ route('gerente.cobros.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
-    <a href="{{ route('gerente.cobros.create') }}"
-        class="ml-auto px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
-        + Registrar Pago
-    </a>
+    <div class="flex gap-2 flex-wrap w-full sm:w-auto">
+        <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
+        <a href="{{ route('gerente.cobros.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
+        <a href="{{ route('gerente.cobros.create') }}"
+            class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
+            + Registrar Pago
+        </a>
+    </div>
 </form>
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[580px]">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">Orden</th>
@@ -103,6 +106,7 @@ $badgePago = [
             @endforelse
         </tbody>
     </table>
+    </div>
     @if($pagos->hasPages())
     <div class="px-4 py-3 border-t border-gray-100">{{ $pagos->links() }}</div>
     @endif

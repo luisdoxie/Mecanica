@@ -31,7 +31,8 @@
 </form>
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[520px]">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">Usuario</th>
@@ -107,6 +108,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
     @if($usuarios->hasPages())
     <div class="px-4 py-3 border-t border-gray-100">{{ $usuarios->links() }}</div>
     @endif

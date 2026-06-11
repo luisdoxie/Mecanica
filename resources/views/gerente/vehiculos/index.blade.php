@@ -5,24 +5,25 @@
 @section('content')
 <x-alert />
 
-<div class="flex items-center justify-between mb-6">
-    <form method="GET" class="flex gap-2 flex-1 max-w-sm">
+<div class="flex flex-wrap items-center gap-3 mb-6">
+    <form method="GET" class="flex gap-2 flex-1 min-w-0">
         <input type="text" name="buscar" value="{{ $buscar }}"
             placeholder="Placa, marca, modelo o cliente..."
-            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-        <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Buscar</button>
+            class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+        <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition shrink-0">Buscar</button>
         @if($buscar)
-            <a href="{{ route('gerente.vehiculos.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">✕</a>
+            <a href="{{ route('gerente.vehiculos.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm shrink-0">✕</a>
         @endif
     </form>
     <a href="{{ route('gerente.vehiculos.create') }}"
-        class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
+        class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
         + Nuevo Vehículo
     </a>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[480px]">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">Placa</th>
@@ -60,6 +61,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
     @if($vehiculos->hasPages())
     <div class="px-4 py-3 border-t border-gray-100">{{ $vehiculos->links() }}</div>
     @endif

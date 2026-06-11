@@ -6,37 +6,41 @@
 <x-alert />
 
 {{-- Filtros --}}
-<form method="GET" class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-6 flex flex-wrap gap-3 items-end">
-    <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
-        <select name="estado" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white">
-            <option value="">Todos</option>
-            @foreach($estados as $e)
-                <option value="{{ $e }}" {{ ($filtros['estado'] ?? '') === $e ? 'selected' : '' }}>{{ $e }}</option>
-            @endforeach
-        </select>
+<form method="GET" class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-6">
+    <div class="flex flex-wrap gap-3 items-end">
+        <div class="w-full sm:w-auto">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Estado</label>
+            <select name="estado" class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white">
+                <option value="">Todos</option>
+                @foreach($estados as $e)
+                    <option value="{{ $e }}" {{ ($filtros['estado'] ?? '') === $e ? 'selected' : '' }}>{{ $e }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="w-full sm:w-auto">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Fecha ingreso</label>
+            <input type="date" name="fecha" value="{{ $filtros['fecha'] ?? '' }}"
+                class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+        </div>
+        <div class="w-full sm:w-auto">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Placa</label>
+            <input type="text" name="placa" value="{{ $filtros['placa'] ?? '' }}" placeholder="ABC-1234"
+                class="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 uppercase">
+        </div>
+        <div class="w-full sm:w-auto">
+            <label class="block text-xs font-medium text-gray-500 mb-1">Cliente</label>
+            <input type="text" name="cliente" value="{{ $filtros['cliente'] ?? '' }}" placeholder="Nombre..."
+                class="w-full sm:w-36 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+        </div>
+        <div class="flex gap-2 flex-wrap w-full sm:w-auto">
+            <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
+            <a href="{{ route('gerente.ordenes.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
+            <a href="{{ route('gerente.ordenes.create') }}"
+                class="sm:ml-auto px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
+                + Nueva Orden
+            </a>
+        </div>
     </div>
-    <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Fecha ingreso</label>
-        <input type="date" name="fecha" value="{{ $filtros['fecha'] ?? '' }}"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-    </div>
-    <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Placa</label>
-        <input type="text" name="placa" value="{{ $filtros['placa'] ?? '' }}" placeholder="ABC-1234"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 uppercase w-32">
-    </div>
-    <div>
-        <label class="block text-xs font-medium text-gray-500 mb-1">Cliente</label>
-        <input type="text" name="cliente" value="{{ $filtros['cliente'] ?? '' }}" placeholder="Nombre..."
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 w-36">
-    </div>
-    <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
-    <a href="{{ route('gerente.ordenes.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
-    <a href="{{ route('gerente.ordenes.create') }}"
-        class="ml-auto px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-lg text-sm transition">
-        + Nueva Orden
-    </a>
 </form>
 
 @php
@@ -50,7 +54,8 @@ $badgeEstado = [
 @endphp
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[640px]">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600"># Orden</th>
@@ -98,6 +103,7 @@ $badgeEstado = [
             @endforelse
         </tbody>
     </table>
+    </div>
     @if($ordenes->hasPages())
     <div class="px-4 py-3 border-t border-gray-100">{{ $ordenes->links() }}</div>
     @endif

@@ -7,42 +7,44 @@
 
 {{-- Filtros --}}
 <form method="GET" class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-5 flex flex-wrap gap-3 items-end">
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs text-gray-500 mb-1">Usuario</label>
         <input type="text" name="usuario" value="{{ $filtros['usuario'] ?? '' }}" placeholder="Nombre..."
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-36">
+            class="w-full sm:w-36 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
     </div>
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs text-gray-500 mb-1">Acción</label>
         <input type="text" name="accion" value="{{ $filtros['accion'] ?? '' }}" placeholder="inicio de sesión..."
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 w-44">
+            class="w-full sm:w-44 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
     </div>
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs text-gray-500 mb-1">Módulo</label>
         <select name="modulo"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+            class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option value="">Todos</option>
             @foreach(['Auth','ClienteController','EmpleadoController','OrdenTrabajoController','CobrosController','ImagenOrden'] as $m)
             <option value="{{ $m }}" {{ ($filtros['modulo'] ?? '') === $m ? 'selected' : '' }}>{{ $m }}</option>
             @endforeach
         </select>
     </div>
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs text-gray-500 mb-1">Desde</label>
         <input type="date" name="desde" value="{{ $filtros['desde'] ?? '' }}"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+            class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
     </div>
-    <div>
+    <div class="w-full sm:w-auto">
         <label class="block text-xs text-gray-500 mb-1">Hasta</label>
         <input type="date" name="hasta" value="{{ $filtros['hasta'] ?? '' }}"
-            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+            class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
     </div>
-    <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
-    <a href="{{ route('admin.bitacora.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
-    <a href="{{ route('admin.bitacora.exportar', $filtros) }}"
-        class="ml-auto px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-sm transition">
-        Exportar Excel
-    </a>
+    <div class="flex gap-2 flex-wrap w-full sm:w-auto">
+        <button class="px-4 py-2 bg-gray-700 text-white rounded-lg text-sm hover:bg-gray-600 transition">Filtrar</button>
+        <a href="{{ route('admin.bitacora.index') }}" class="px-3 py-2 text-gray-500 hover:text-gray-700 text-sm">Limpiar</a>
+        <a href="{{ route('admin.bitacora.exportar', $filtros) }}"
+            class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-sm transition">
+            Exportar Excel
+        </a>
+    </div>
 </form>
 
 @php
@@ -61,7 +63,8 @@ $badgeAccion = function(string $accion): string {
 @endphp
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <table class="w-full text-sm">
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm min-w-[700px]">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600 whitespace-nowrap">Fecha y hora</th>
@@ -128,6 +131,7 @@ $badgeAccion = function(string $accion): string {
             @endforelse
         </tbody>
     </table>
+    </div>
     @if($registros->hasPages())
     <div class="px-4 py-3 border-t border-gray-100">{{ $registros->links() }}</div>
     @endif
