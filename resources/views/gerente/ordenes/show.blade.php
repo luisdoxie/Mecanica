@@ -1,4 +1,4 @@
-﻿@extends('layouts.gerente')
+﻿@extends($layout)
 @section('title', 'Orden #' . $orden->id)
 @section('header', 'Orden de Trabajo #' . $orden->id)
 

@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+@extends($layout)
 @section('title', 'Registrar Pago')
 @section('header', 'Registrar Pago de Orden')
 

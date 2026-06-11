@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+@extends($layout)
 @section('title', 'Clientes')
 @section('header', 'Gestión de Clientes')
 

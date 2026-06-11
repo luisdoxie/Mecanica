@@ -1,4 +1,4 @@
-﻿@extends('layouts.gerente')
+﻿@extends($layout)
 @section('title', 'Gastos')
 @section('header', 'Registro de Gastos')
 

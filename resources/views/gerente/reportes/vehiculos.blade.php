@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+@extends($layout)
 @section('title', 'Reporte de Vehículos')
 @section('header', 'Reporte Semanal de Vehículos')
 

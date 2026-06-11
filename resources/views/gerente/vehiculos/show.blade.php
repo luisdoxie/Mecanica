@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+@extends($layout)
 @section('title', 'Vehículo')
 @section('header', 'Historial del Vehículo')
 

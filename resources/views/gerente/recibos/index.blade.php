@@ -1,4 +1,4 @@
-@extends('layouts.gerente')
+@extends($layout)
 @section('title', 'Recibos')
 @section('header', 'Recibos PDF')
 
