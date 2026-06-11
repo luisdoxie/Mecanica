@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/empleados/{empleado}',                 [EmpleadoApiController::class, 'show']);
     Route::put('/empleados/{empleado}',                 [EmpleadoApiController::class, 'update']);
     Route::patch('/empleados/{empleado}/desactivar',    [EmpleadoApiController::class, 'desactivar']);
+    Route::patch('/empleados/{empleado}/reactivar',     [EmpleadoApiController::class, 'reactivar']);
     Route::delete('/empleados/{empleado}',              [EmpleadoApiController::class, 'destroy']);
 
     // Cobros

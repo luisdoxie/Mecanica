@@ -125,6 +125,16 @@ class EmpleadoApiController extends Controller
         return response()->json(['message' => 'Empleado desactivado.']);
     }
 
+    public function reactivar(Empleado $empleado)
+    {
+        $empleado->update(['activo' => true]);
+
+        $user = User::where('persona_id', $empleado->persona_id)->first();
+        $user?->update(['activo' => true]);
+
+        return response()->json(['message' => 'Empleado reactivado.']);
+    }
+
     public function destroy(Empleado $empleado)
     {
         $activas = $empleado->ordenesTrabajo()->whereNotIn('estado', ['ENTREGADO'])->count();
