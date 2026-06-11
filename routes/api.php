@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CobroApiController;
 use App\Http\Controllers\Api\GastoApiController;
 use App\Http\Controllers\Api\ComisionApiController;
 use App\Http\Controllers\Api\BitacoraApiController;
+use App\Http\Controllers\Api\UsuarioApiController;
 use App\Http\Controllers\Api\CatalogoApiController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Bitácora
     Route::get('/bitacora', [BitacoraApiController::class, 'index']);
+
+    // Usuarios (solo SUPER_ADMIN)
+    Route::get('/usuarios', [UsuarioApiController::class, 'index']);
 
     // Catálogos para formularios
     Route::get('/catalogo/servicios',        [CatalogoApiController::class, 'servicios']);
