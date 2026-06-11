@@ -107,6 +107,10 @@ class DashboardApiController extends Controller
             ->latest()
             ->get();
 
+        $sueldoAsignado = PagoEmpleado::where('empleado_id', $empleado->id)
+            ->where('periodo', now()->format('Y-m'))
+            ->sum('monto');
+
         return response()->json([
             'semana_inicio'    => $inicio->format('d/m/Y'),
             'semana_fin'       => $fin->format('d/m/Y'),
@@ -114,6 +118,7 @@ class DashboardApiController extends Controller
             'total_servicios'  => $ordenes->sum(fn($o) => $o->servicios->count()),
             'total_repuestos'  => $ordenes->sum(fn($o) => $o->repuestos->count()),
             'ingreso_generado' => $ordenes->sum(fn($o) => (float) $o->costo_total),
+            'sueldo_asignado'  => (float) $sueldoAsignado,
             'ordenes'          => $ordenes->map(fn($o) => [
                 'id'            => $o->id,
                 'estado'        => $o->estado,
