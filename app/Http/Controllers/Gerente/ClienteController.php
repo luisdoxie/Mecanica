@@ -42,7 +42,10 @@ class ClienteController extends Controller
 
     public function store(StoreClienteRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $pin = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $puedeLogin = $request->boolean('puede_login');
+
+        DB::transaction(function () use ($request, $pin, $puedeLogin) {
             $persona = Persona::create([
                 'nombre'    => $request->nombre,
                 'apellido'  => $request->apellido,
@@ -54,15 +57,30 @@ class ClienteController extends Controller
 
             Cliente::create([
                 'persona_id'  => $persona->id,
-                'pin_acceso'  => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
-                'puede_login' => $request->boolean('puede_login'),
+                'pin_acceso'  => $pin,
+                'puede_login' => $puedeLogin,
             ]);
+
+            if ($puedeLogin && $persona->email) {
+                User::create([
+                    'persona_id' => $persona->id,
+                    'name'       => $persona->nombre . ' ' . $persona->apellido,
+                    'email'      => $persona->email,
+                    'password'   => Hash::make($pin),
+                    'rol'        => 'CLIENTE',
+                    'activo'     => true,
+                ]);
+            }
         });
 
         ActivityLogger::log('Cliente creado', class_basename(__CLASS__));
 
+        $mensaje = $puedeLogin && $request->email
+            ? "Cliente registrado. Puede ingresar con su correo y PIN: {$pin}"
+            : 'Cliente registrado correctamente.';
+
         return redirect()->route('gerente.clientes.index')
-            ->with('success', 'Cliente registrado correctamente.');
+            ->with('success', $mensaje);
     }
 
     public function show(Cliente $cliente)

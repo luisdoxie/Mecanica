@@ -15,7 +15,7 @@ class StoreClienteRequest extends FormRequest
             'apellido'  => 'required|string|max:100',
             'ci'        => 'required|string|max:20|unique:personas,ci',
             'telefono'  => 'nullable|string|max:20',
-            'email'     => 'nullable|email|max:150|unique:personas,email',
+            'email'     => 'nullable|email|max:150|unique:personas,email|required_if:puede_login,1',
             'direccion' => 'nullable|string|max:500',
             'puede_login' => 'boolean',
         ];
@@ -28,8 +28,9 @@ class StoreClienteRequest extends FormRequest
             'apellido.required' => 'El apellido es obligatorio.',
             'ci.required'       => 'La cédula de identidad es obligatoria.',
             'ci.unique'         => 'Ya existe un cliente registrado con esa cédula.',
-            'email.email'       => 'El correo electrónico no tiene un formato válido.',
-            'email.unique'      => 'Ya existe un registro con ese correo electrónico.',
+            'email.email'         => 'El correo electrónico no tiene un formato válido.',
+            'email.unique'        => 'Ya existe un registro con ese correo electrónico.',
+            'email.required_if'   => 'El correo es obligatorio si se activa el acceso web.',
         ];
     }
 }
