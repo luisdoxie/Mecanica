@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -32,6 +33,8 @@ class AuthApiController extends Controller
 
         $token = $user->createToken('mecanica-app')->plainTextToken;
 
+        ActivityLogger::log('Inicio de sesión (app)', 'Auth', $user->id, [], ['rol' => $user->rol]);
+
         return response()->json([
             'token' => $token,
             'user'  => [
@@ -47,6 +50,7 @@ class AuthApiController extends Controller
 
     public function logout(Request $request)
     {
+        ActivityLogger::log('Cierre de sesión (app)', 'Auth', $request->user()->id);
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Sesión cerrada.']);
     }

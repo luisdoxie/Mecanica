@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Empleado;
 use App\Models\Persona;
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -66,6 +67,8 @@ class EmpleadoApiController extends Controller
             ]);
         });
 
+        ActivityLogger::log('API: Empleado creado', 'EmpleadoApiController');
+
         return response()->json(['message' => 'Empleado creado. Contraseña inicial: CI del empleado.'], 201);
     }
 
@@ -122,6 +125,8 @@ class EmpleadoApiController extends Controller
         $user = User::where('persona_id', $empleado->persona_id)->first();
         $user?->update(['activo' => false]);
 
+        ActivityLogger::log("API: Empleado #{$empleado->id} desactivado", 'EmpleadoApiController', $empleado->id);
+
         return response()->json(['message' => 'Empleado desactivado.']);
     }
 
@@ -131,6 +136,8 @@ class EmpleadoApiController extends Controller
 
         $user = User::where('persona_id', $empleado->persona_id)->first();
         $user?->update(['activo' => true]);
+
+        ActivityLogger::log("API: Empleado #{$empleado->id} reactivado", 'EmpleadoApiController', $empleado->id);
 
         return response()->json(['message' => 'Empleado reactivado.']);
     }

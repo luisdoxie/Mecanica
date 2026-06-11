@@ -241,6 +241,8 @@ class OrdenApiController extends Controller
 
         $orden->update(['empleado_id' => $empleado->id]);
 
+        ActivityLogger::log("API: Mecánico asignado a orden #{$orden->id}", 'OrdenApiController', $orden->id);
+
         return response()->json(['message' => 'Te has asignado a la orden.']);
     }
 
@@ -270,6 +272,8 @@ class OrdenApiController extends Controller
 
         $this->_recalcularCosto($orden);
 
+        ActivityLogger::log("API: Servicio agregado a orden #{$orden->id}", 'OrdenApiController', $orden->id);
+
         return response()->json(['message' => 'Servicio agregado.']);
     }
 
@@ -284,6 +288,8 @@ class OrdenApiController extends Controller
         $orden->servicios()->detach($request->servicio_id);
 
         $this->_recalcularCosto($orden);
+
+        ActivityLogger::log("API: Servicio quitado de orden #{$orden->id}", 'OrdenApiController', $orden->id);
 
         return response()->json(['message' => 'Servicio quitado.']);
     }
@@ -313,6 +319,8 @@ class OrdenApiController extends Controller
 
         $this->_recalcularCosto($orden);
 
+        ActivityLogger::log("API: Repuesto agregado a orden #{$orden->id}", 'OrdenApiController', $orden->id);
+
         return response()->json(['message' => 'Repuesto agregado.']);
     }
 
@@ -329,6 +337,8 @@ class OrdenApiController extends Controller
         $repuesto->delete();
 
         $this->_recalcularCosto($orden);
+
+        ActivityLogger::log("API: Repuesto eliminado de orden #{$orden->id}", 'OrdenApiController', $orden->id);
 
         return response()->json(['message' => 'Repuesto eliminado.']);
     }
