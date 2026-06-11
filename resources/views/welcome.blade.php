@@ -107,7 +107,7 @@
             </form>
 
             @if(isset($resultado))
-                <div class="mt-6">
+                <div class="mt-6" id="resultado">
                     @if($resultado['encontrado'])
                         @php
                             $estadoColors = [
@@ -257,6 +257,17 @@
             <p class="text-gray-500 text-sm">© {{ date('Y') }} Taller Mecánico Eusebio. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+@if(isset($resultado))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById('resultado');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+</script>
+@endif
 
 </body>
 </html>
