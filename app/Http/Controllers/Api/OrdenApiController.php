@@ -305,22 +305,24 @@ class OrdenApiController extends Controller
         ]);
 
         try {
-            $resultado = cloudinary()->upload($request->file('foto')->getRealPath(), [
-                'folder' => 'taller-mecanico/ordenes/' . $orden->id,
+            $resultado = cloudinary()->uploadApi()->upload($request->file('foto')->getRealPath(), [
+                'folder'        => 'taller-mecanico/ordenes/' . $orden->id,
+                'resource_type' => 'image',
             ]);
 
             $imagen = ImagenOrden::create([
                 'orden_trabajo_id' => $orden->id,
                 'tipo'             => $request->tipo,
-                'cloudinary_url'   => $resultado->getSecurePath(),
-                'cloudinary_id'    => $resultado->getPublicId(),
+                'cloudinary_url'   => $resultado['secure_url'],
+                'cloudinary_id'    => $resultado['public_id'],
                 'descripcion'      => $request->descripcion ?? '',
                 'subida_por'       => $request->user()->id,
             ]);
 
             return response()->json(['url' => $imagen->cloudinary_url, 'tipo' => $imagen->tipo]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al subir foto.'], 500);
+            \Log::error('Cloudinary upload error: ' . $e->getMessage());
+            return response()->json(['message' => 'Error al subir foto: ' . $e->getMessage()], 500);
         }
     }
 
