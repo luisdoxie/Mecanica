@@ -72,8 +72,8 @@
                     <div class="text-gray-400 text-sm">Años de experiencia</div>
                 </div>
                 <div class="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 text-center">
-                    <div class="text-4xl font-black text-amber-400 mb-2">8</div>
-                    <div class="text-gray-400 text-sm">Mecánicos certificados</div>
+                    <div class="text-4xl font-black text-amber-400 mb-2">⏱️</div>
+                    <div class="text-gray-400 text-sm">Entrega a tiempo</div>
                 </div>
                 <div class="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 text-center">
                     <div class="text-4xl font-black text-amber-400 mb-2">98%</div>
@@ -207,10 +207,10 @@
                 $servicios = [
                     ['icon' => '🔧', 'name' => 'Mantenimiento Preventivo',  'desc' => 'Cambio de aceite, filtros y revisión completa según kilometraje.'],
                     ['icon' => '🔩', 'name' => 'Mecánica General',           'desc' => 'Reparación de motor, transmisión, frenos y suspensión.'],
-                    ['icon' => '⚡',  'name' => 'Diagnóstico Electrónico',   'desc' => 'Lectura de códigos OBD y diagnóstico computarizado de última generación.'],
-                    ['icon' => '❄️', 'name' => 'Aire Acondicionado',         'desc' => 'Revisión, recarga y reparación del sistema de climatización.'],
+                    ['icon' => '🚗', 'name' => 'Suspensión y Dirección',      'desc' => 'Revisión de amortiguadores, rótulas, terminales y barra estabilizadora.'],
+                    ['icon' => '⛽', 'name' => 'Sistema de Combustible',     'desc' => 'Limpieza de inyectores, bomba de combustible y filtros.'],
                     ['icon' => '🔋', 'name' => 'Sistema Eléctrico',          'desc' => 'Diagnóstico y reparación de fallas eléctricas y batería.'],
-                    ['icon' => '🛞', 'name' => 'Neumáticos y Alineación',    'desc' => 'Balanceo, alineación y montaje de neumáticos de todas las medidas.'],
+                    ['icon' => '🛢️', 'name' => 'Cambio de Fluidos',          'desc' => 'Aceite de caja, dirección hidráulica, líquido de frenos y refrigerante.'],
                 ];
                 @endphp
                 @foreach($servicios as $svc)
