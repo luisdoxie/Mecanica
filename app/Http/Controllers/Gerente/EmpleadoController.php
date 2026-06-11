@@ -136,7 +136,11 @@ class EmpleadoController extends Controller
         $empleado->update(['activo' => false]);
 
         if ($empleado->persona_id) {
-            \App\Models\User::where('persona_id', $empleado->persona_id)->update(['activo' => false]);
+            $user = \App\Models\User::where('persona_id', $empleado->persona_id)->first();
+            if ($user) {
+                $user->update(['activo' => false]);
+                $user->tokens()->delete();
+            }
         }
 
         ActivityLogger::log('Empleado desactivado', class_basename(__CLASS__));
