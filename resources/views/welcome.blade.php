@@ -235,8 +235,7 @@
                 <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 text-center">
                     <div class="text-3xl mb-3">📞</div>
                     <h4 class="text-white font-semibold mb-1">Teléfono</h4>
-                    <p class="text-amber-400 font-medium">+58 412-555-0100</p>
-                    <p class="text-gray-400 text-sm">+58 424-555-0200</p>
+                    <p class="text-amber-400 font-medium">71056485</p>
                 </div>
                 <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 text-center">
                     <div class="text-3xl mb-3">📍</div>
