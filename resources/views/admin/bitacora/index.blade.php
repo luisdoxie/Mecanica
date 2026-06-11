@@ -73,12 +73,11 @@ $badgeAccion = function(string $accion): string {
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">Módulo</th>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">IP</th>
                 <th class="text-left px-4 py-3 font-semibold text-gray-600">Dispositivo</th>
-                <th class="text-center px-4 py-3 font-semibold text-gray-600">Datos</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-50">
             @forelse($registros as $r)
-            <tr class="hover:bg-gray-50 transition" x-data="{ open: false }">
+            <tr class="hover:bg-gray-50 transition">
                 <td class="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
                     {{ \Carbon\Carbon::parse($r->created_at)->format('d/m/Y H:i:s') }}
                 </td>
@@ -96,36 +95,7 @@ $badgeAccion = function(string $accion): string {
                 <td class="px-4 py-3 text-gray-400 text-xs max-w-[180px] truncate" title="{{ $r->dispositivo }}">
                     {{ $r->dispositivo ? \Str::limit($r->dispositivo, 40) : '—' }}
                 </td>
-                <td class="px-4 py-3 text-center">
-                    @if($r->datos_anteriores || $r->datos_nuevos)
-                    <button @click="open = !open" class="text-purple-600 hover:text-purple-800 text-xs font-medium">
-                        <span x-text="open ? 'Cerrar' : 'Ver'"></span>
-                    </button>
-                    @else
-                    <span class="text-gray-300 text-xs">—</span>
-                    @endif
-                </td>
             </tr>
-            @if($r->datos_anteriores || $r->datos_nuevos)
-            <tr x-show="open" class="bg-purple-50/50">
-                <td colspan="7" class="px-6 py-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        @if($r->datos_anteriores)
-                        <div>
-                            <p class="text-xs font-bold text-red-600 mb-1">Antes</p>
-                            <pre class="text-xs bg-white border border-red-100 rounded p-2 overflow-auto max-h-40">{{ json_encode($r->datos_anteriores, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                        </div>
-                        @endif
-                        @if($r->datos_nuevos)
-                        <div>
-                            <p class="text-xs font-bold text-green-600 mb-1">Después</p>
-                            <pre class="text-xs bg-white border border-green-100 rounded p-2 overflow-auto max-h-40">{{ json_encode($r->datos_nuevos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                        </div>
-                        @endif
-                    </div>
-                </td>
-            </tr>
-            @endif
             @empty
             <tr><td colspan="7" class="px-4 py-10 text-center text-gray-400">Sin registros en la bitácora.</td></tr>
             @endforelse
