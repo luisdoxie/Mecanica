@@ -3,40 +3,45 @@
 @section('header', 'Nueva Orden de Trabajo')
 
 @section('content')
+@php
+    $oldVId      = old('vehiculo_id', '');
+    $oldVehiculo = $oldVId ? $vehiculos->firstWhere('id', $oldVId) : null;
+    $oldVLabel   = $oldVehiculo ? ($oldVehiculo->placa . ' — ' . $oldVehiculo->marca . ' ' . $oldVehiculo->modelo) : '';
+
+    $oldEId      = old('empleado_id', '');
+    $oldEmpleado = $oldEId ? $empleados->firstWhere('id', $oldEId) : null;
+    $oldELabel   = $oldEmpleado ? ($oldEmpleado->persona->apellido . ', ' . $oldEmpleado->persona->nombre) : '';
+@endphp
+
 <script>
-    const _vehiculosOrden  = @json($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->apellido . ', ' . $v->cliente->persona->nombre . ')']));
-    const _empleadosOrden  = @json($empleados->map(fn($e) => ['id' => $e->id, 'label' => $e->persona->apellido . ', ' . $e->persona->nombre . ' — ' . $e->cargo]));
+document.addEventListener('alpine:init', () => {
+    Alpine.data('buscadorVehiculo', () => ({
+        buscar: '', abierto: false,
+        selId: @js($oldVId),
+        selNombre: @js($oldVLabel),
+        lista: @js($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->apellido . ', ' . $v->cliente->persona->nombre . ')'])),
+        get filtrados() {
+            if (!this.buscar) return this.lista;
+            const b = this.buscar.toLowerCase();
+            return this.lista.filter(v => v.label.toLowerCase().includes(b));
+        },
+        seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; }
+    }));
 
-    function buscadorVehiculo() {
-        return {
-            buscar: '', abierto: false,
-            selId: '{{ old('vehiculo_id', '') }}',
-            selNombre: {{ json_encode(old('vehiculo_id') ? (($vehiculos->firstWhere('id', old('vehiculo_id'))?->placa ?? '') . ' — ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->marca ?? '') . ' ' . ($vehiculos->firstWhere('id', old('vehiculo_id'))?->modelo ?? '')) : '') }},
-            lista: _vehiculosOrden,
-            get filtrados() {
-                if (!this.buscar) return this.lista;
-                const b = this.buscar.toLowerCase();
-                return this.lista.filter(v => v.label.toLowerCase().includes(b));
-            },
-            seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; }
-        };
-    }
-
-    function buscadorEmpleado() {
-        return {
-            buscar: '', abierto: false,
-            selId: '{{ old('empleado_id', '') }}',
-            selNombre: {{ json_encode(old('empleado_id') ? (($empleados->firstWhere('id', old('empleado_id'))?->persona->apellido ?? '') . ', ' . ($empleados->firstWhere('id', old('empleado_id'))?->persona->nombre ?? '')) : '') }},
-            lista: _empleadosOrden,
-            get filtrados() {
-                if (!this.buscar) return this.lista;
-                const b = this.buscar.toLowerCase();
-                return this.lista.filter(e => e.label.toLowerCase().includes(b));
-            },
-            seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; },
-            limpiar() { this.selId = ''; this.selNombre = ''; this.buscar = ''; }
-        };
-    }
+    Alpine.data('buscadorEmpleado', () => ({
+        buscar: '', abierto: false,
+        selId: @js($oldEId),
+        selNombre: @js($oldELabel),
+        lista: @js($empleados->map(fn($e) => ['id' => $e->id, 'label' => $e->persona->apellido . ', ' . $e->persona->nombre . ' — ' . $e->cargo])),
+        get filtrados() {
+            if (!this.buscar) return this.lista;
+            const b = this.buscar.toLowerCase();
+            return this.lista.filter(e => e.label.toLowerCase().includes(b));
+        },
+        seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; },
+        limpiar() { this.selId = ''; this.selNombre = ''; this.buscar = ''; }
+    }));
+});
 </script>
 
 <div class="max-w-2xl">
@@ -47,7 +52,7 @@
             @csrf
 
             {{-- Vehículo --}}
-            <div x-data="buscadorVehiculo()">
+            <div x-data="buscadorVehiculo">
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Vehículo <span class="text-red-500">*</span>
                 </label>
@@ -77,7 +82,7 @@
             </div>
 
             {{-- Mecánico asignado --}}
-            <div x-data="buscadorEmpleado()">
+            <div x-data="buscadorEmpleado">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Mecánico asignado</label>
                 <input type="hidden" name="empleado_id" :value="selId">
                 <div class="relative">

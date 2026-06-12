@@ -10,22 +10,20 @@
 @endphp
 
 <script>
-    window._vehiculosMecanico = @json($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido . ')']));
-
-    function buscadorVehiculoMec() {
-        return {
-            buscar: '', abierto: false,
-            selId: '{{ $oldVId }}',
-            selNombre: {{ json_encode($oldVLabel) }},
-            lista: window._vehiculosMecanico || [],
-            get filtrados() {
-                if (!this.buscar) return this.lista;
-                const b = this.buscar.toLowerCase();
-                return this.lista.filter(v => v.label.toLowerCase().includes(b));
-            },
-            seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; }
-        };
-    }
+document.addEventListener('alpine:init', () => {
+    Alpine.data('buscadorVehiculoMec', () => ({
+        buscar: '', abierto: false,
+        selId: @js($oldVId ?? ''),
+        selNombre: @js($oldVLabel ?? ''),
+        lista: @js($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido . ')'])),
+        get filtrados() {
+            if (!this.buscar) return this.lista;
+            const b = this.buscar.toLowerCase();
+            return this.lista.filter(v => v.label.toLowerCase().includes(b));
+        },
+        seleccionar(id, nombre) { this.selId = id; this.selNombre = nombre; this.buscar = ''; this.abierto = false; }
+    }));
+});
 </script>
 
 <div class="max-w-xl">
@@ -54,7 +52,7 @@
             No hay vehículos registrados. Primero registra un <a href="{{ route('mecanico.clientes.create') }}" class="underline font-semibold">cliente y su vehículo</a>.
         </div>
         @else
-        <div x-data="buscadorVehiculoMec()">
+        <div x-data="buscadorVehiculoMec">
             <label class="block text-sm font-medium text-gray-700 mb-1">
                 Vehículo del cliente <span class="text-red-500">*</span>
             </label>
