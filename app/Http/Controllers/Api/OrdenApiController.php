@@ -8,6 +8,7 @@ use App\Models\HistorialEstado;
 use App\Models\ImagenOrden;
 use App\Models\OrdenTrabajo;
 use App\Models\RepuestoUtilizado;
+use App\Models\Servicio;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -260,12 +261,23 @@ class OrdenApiController extends Controller
         }
 
         $request->validate([
-            'servicio_id'    => 'required|exists:servicios,id',
+            'servicio_id'    => 'nullable|exists:servicios,id',
+            'nombre'         => 'required_without:servicio_id|string|max:255',
             'precio_aplicado'=> 'required|numeric|min:0',
             'observaciones'  => 'nullable|string|max:255',
         ]);
 
-        $orden->servicios()->attach($request->servicio_id, [
+        $servicioId = $request->servicio_id;
+        if (!$servicioId) {
+            $servicio = Servicio::create([
+                'nombre'      => $request->nombre,
+                'precio_base' => $request->precio_aplicado,
+                'activo'      => false,
+            ]);
+            $servicioId = $servicio->id;
+        }
+
+        $orden->servicios()->attach($servicioId, [
             'precio_aplicado' => $request->precio_aplicado,
             'observaciones'   => $request->observaciones,
         ]);
