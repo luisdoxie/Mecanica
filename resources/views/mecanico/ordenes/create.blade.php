@@ -10,14 +10,14 @@
 @endphp
 
 <script>
-    const _vehiculosMecanico = @json($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido . ')']));
+    window._vehiculosMecanico = @json($vehiculos->map(fn($v) => ['id' => $v->id, 'label' => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo . ' (' . $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido . ')']));
 
     function buscadorVehiculoMec() {
         return {
             buscar: '', abierto: false,
             selId: '{{ $oldVId }}',
             selNombre: {{ json_encode($oldVLabel) }},
-            lista: _vehiculosMecanico,
+            lista: window._vehiculosMecanico || [],
             get filtrados() {
                 if (!this.buscar) return this.lista;
                 const b = this.buscar.toLowerCase();
@@ -49,6 +49,11 @@
         @csrf
 
         {{-- Vehículo con buscador --}}
+        @if($vehiculos->isEmpty())
+        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+            No hay vehículos registrados. Primero registra un <a href="{{ route('mecanico.clientes.create') }}" class="underline font-semibold">cliente y su vehículo</a>.
+        </div>
+        @else
         <div x-data="buscadorVehiculoMec()">
             <label class="block text-sm font-medium text-gray-700 mb-1">
                 Vehículo del cliente <span class="text-red-500">*</span>
@@ -80,6 +85,7 @@
             <p class="mt-1 text-xs text-green-600 font-medium">✓ Vehículo recién registrado pre-seleccionado</p>
             @endif
         </div>
+        @endif
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
