@@ -31,42 +31,64 @@ npm run build
 
 ## Architecture
 
-This is a **Laravel 11 + Vue.js** repair shop management system (Taller García). The frontend uses Blade templates with Vue components compiled via Vite.
+**Laravel 11 + Blade/Vue** repair shop management system (Taller García). Frontend is primarily Blade templates with Vue components compiled via Vite. API routes (`routes/api.php`) use Laravel Sanctum token auth and mirror most web functionality for mobile/external clients.
 
 ### Role-Based Access Control
 
-Four roles with completely separate controller namespaces and route groups in `routes/web.php`:
+Four roles with completely separate controller namespaces and route groups in `routes/web.php`. The custom `RoleMiddleware` (`middleware('role:ROLE1,ROLE2,...')`) enforces access — unauthenticated users are redirected to login.
 
-| Role | Namespace | Scope |
-|------|-----------|-------|
-| `SUPER_ADMIN` | `App\Http\Controllers\Admin\` | System config, user management |
-| `GERENTE` | `App\Http\Controllers\Gerente\` | Clients, work orders, finances |
-| `MECANICO` | `App\Http\Controllers\Mecanico\` | Repair work, vehicle management |
-| `CLIENTE` | `App\Http\Controllers\Cliente\` | View own vehicle status |
+| Role | Route Prefix | Controller Namespace | Scope |
+|------|-------------|---------------------|-------|
+| `SUPER_ADMIN` | `/admin` | `App\Http\Controllers\Admin\` | Users, audit log, reports, system config |
+| `GERENTE` | `/gerente` | `App\Http\Controllers\Gerente\` | Clients, work orders, payments, expenses, payroll, receipts |
+| `MECANICO` | `/mecanico` | `App\Http\Controllers\Mecanico\` | Work orders, vehicles, parts, payments |
+| `CLIENTE` | `/cliente` | `App\Http\Controllers\Cliente\` | View own vehicle status only |
 
-Middleware enforces these in `routes/web.php`. API routes live in `routes/api.php` and use Laravel Sanctum token auth.
+Vehicles (`/gerente/vehiculos`) are shared between GERENTE, MECANICO, and SUPER_ADMIN. Public routes exist for the home page and vehicle status inquiry by plate (`/estado/{placa}`).
 
 ### Core Domain Models
 
 Work order lifecycle: `RECIBIDO → DIAGNOSTICO → REPARACION → LISTO → ENTREGADO`
 
+The `Persona` model is a shared identity base — both `Empleado` and `Cliente` belong to a `Persona`, and `User` also belongs to `Persona`. This means a single person record can be linked to multiple roles.
+
 Key relationships:
-- `OrdenTrabajo` (work order) → has many `OrdenServicio` (services performed), `RepuestoUtilizado` (parts used), `HistorialEstado` (status history), `ImagenOrden` (photos), `PagoOrden` (payments)
-- `Vehiculo` → belongs to `Cliente` → belongs to `User`/`Persona`
-- `Empleado` → has many `PagoEmpleado` (payroll)
+- `OrdenTrabajo` → `Vehiculo` (belongs), `Empleado` (belongs), `OrdenServicio` (has-many pivot with `precio_aplicado`/`observaciones`), `RepuestoUtilizado` (has-many), `HistorialEstado` (has-many), `ImagenOrden` (has-many), `PagoOrden` (has-many)
+- `Vehiculo` → `Cliente` (belongs) → `Persona` (belongs); `placa` is always uppercased by the model
+- `Cliente` → `Persona` (belongs), `vehiculos` (has-many); has `pin_acceso` and `puede_login` flag
+- `Empleado` → `Persona` (belongs), `especialidades` (many-to-many), `ordenesTrabajo` (has-many), `PagoEmpleado` (has-many)
+- `User` → `Persona` (belongs); `rol` is one of `SUPER_ADMIN|GERENTE|MECANICO|CLIENTE`; has `activo` flag
+- `Gasto` → optional `orden_trabajo_id`; links to `CategoriaGasto`
+- `ConfigTaller` — key-value store (`clave`, `valor`, `tipo`) for shop-wide settings
+
+### Activity Logging
+
+`app/Services/ActivityLogger.php` is a **custom** logger that writes directly to the `activity_log` table (not Spatie). Call it in controllers after any state-changing operation:
+
+```php
+ActivityLogger::log(
+    accion: 'crear',
+    modulo: 'ordenes',
+    registroId: $orden->id,
+    datosAnteriores: [],
+    datosNuevos: $orden->toArray()
+);
+```
+
+It automatically captures the authenticated user's ID, role, IP, and user agent. Failures are silently swallowed so logging never blocks the main operation.
 
 ### Services & Cross-Cutting Concerns
 
-- **`app/Services/ActivityLogger.php`** — wraps Spatie Activity Log; call it to audit any user action
-- **Cloudinary** — used for vehicle/repair images (`cloudinary-labs/cloudinary-laravel`)
-- **PDF generation** — `barryvdh/laravel-dompdf` for receipts/invoices
-- **Excel exports** — `maatwebsite/excel` in `app/Exports/`
-- **Email** — Resend service via `resend/resend-laravel`, mail classes in `app/Mail/`
+- **Cloudinary** — vehicle/repair image uploads (`cloudinary-labs/cloudinary-laravel`); `ImagenOrden` stores the Cloudinary URL
+- **PDF generation** — `barryvdh/laravel-dompdf` for receipts; templates in `resources/views/pdf/`; note: DomPDF does not support CSS flexbox — use HTML tables in PDF templates
+- **Excel exports** — `maatwebsite/excel`; six export classes in `app/Exports/` (bitácora, órdenes, financiero, cobros, servicios, clientes)
+- **Email** — Resend service via `resend/resend-laravel`; `VehiculoListoMail` notifies the customer when their vehicle is ready
+- **Security headers** — `SecurityHeaders` middleware applies OWASP headers (CSP, X-Frame-Options, HSTS in production) globally
 
 ### Database
 
-Defaults to SQLite (set in `.env`). Can switch to MySQL by changing `DB_CONNECTION`. Migrations are in `database/migrations/` (23 migrations). Session, cache, and queue all use the database driver by default.
+SQLite by default (configured in `.env`). Session, cache, and queue all use the `database` driver. Switch to MySQL by changing `DB_CONNECTION` in `.env`. Migrations are in `database/migrations/` (24 migrations).
 
 ### Environment
 
-Timezone is `America/La_Paz`. Check `.env.example` for all required variables — notable ones: `CLOUDINARY_*`, `RESEND_KEY`, `APP_URL`.
+Timezone is `America/La_Paz` (set in `.env`/`config/app.php`). Required `.env` variables: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `RESEND_KEY`, `APP_URL`.

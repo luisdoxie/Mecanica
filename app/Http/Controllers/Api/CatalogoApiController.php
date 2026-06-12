@@ -44,10 +44,11 @@ class CatalogoApiController extends Controller
         return response()->json(
             Vehiculo::with('cliente.persona')->get()
                 ->map(fn($v) => [
-                    'id'     => $v->id,
-                    'label'  => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo,
-                    'placa'  => $v->placa,
-                    'cliente'=> $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido,
+                    'id'         => $v->id,
+                    'label'      => $v->placa . ' — ' . $v->marca . ' ' . $v->modelo,
+                    'placa'      => $v->placa,
+                    'cliente'    => $v->cliente->persona->nombre . ' ' . $v->cliente->persona->apellido,
+                    'cliente_id' => $v->cliente_id,
                 ])
         );
     }
