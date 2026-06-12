@@ -30,7 +30,7 @@ class ClienteApiController extends Controller
         $request->validate([
             'nombre'    => 'required|string|max:100',
             'apellido'  => 'required|string|max:100',
-            'ci'        => 'required|string|max:20|unique:personas,ci',
+            'ci'        => 'nullable|string|max:20|unique:personas,ci',
             'telefono'  => 'nullable|string|max:20',
             'email'     => 'nullable|email|max:100',
             'direccion' => 'nullable|string|max:255',
@@ -86,7 +86,7 @@ class ClienteApiController extends Controller
         $request->validate([
             'nombre'    => 'required|string|max:100',
             'apellido'  => 'required|string|max:100',
-            'ci'        => 'required|string|max:20|unique:personas,ci,' . $cliente->persona_id,
+            'ci'        => 'nullable|string|max:20|unique:personas,ci,' . $cliente->persona_id,
             'telefono'  => 'nullable|string|max:20',
             'email'     => 'nullable|email|max:100',
             'direccion' => 'nullable|string|max:255',

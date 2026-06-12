@@ -13,7 +13,7 @@ class StoreClienteRequest extends FormRequest
         return [
             'nombre'    => 'required|string|max:100',
             'apellido'  => 'required|string|max:100',
-            'ci'        => 'required|string|max:20|unique:personas,ci',
+            'ci'        => 'nullable|string|max:20|unique:personas,ci',
             'telefono'  => 'nullable|string|max:20',
             'email'     => 'nullable|email|max:150|unique:personas,email|required_if:puede_login,1',
             'direccion' => 'nullable|string|max:500',

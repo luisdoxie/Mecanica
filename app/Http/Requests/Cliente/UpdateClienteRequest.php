@@ -15,7 +15,7 @@ class UpdateClienteRequest extends FormRequest
         return [
             'nombre'    => 'required|string|max:100',
             'apellido'  => 'required|string|max:100',
-            'ci'        => "required|string|max:20|unique:personas,ci,{$personaId}",
+            'ci'        => "nullable|string|max:20|unique:personas,ci,{$personaId}",
             'telefono'  => 'nullable|string|max:20',
             'email'     => "nullable|email|max:150|unique:personas,email,{$personaId}|required_if:puede_login,1",
             'direccion' => 'nullable|string|max:500',
