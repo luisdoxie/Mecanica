@@ -123,7 +123,10 @@ class EmpleadoApiController extends Controller
         $empleado->update(['activo' => false]);
 
         $user = User::where('persona_id', $empleado->persona_id)->first();
-        $user?->update(['activo' => false]);
+        if ($user) {
+            $user->update(['activo' => false]);
+            $user->tokens()->delete();
+        }
 
         ActivityLogger::log("API: Empleado #{$empleado->id} desactivado", 'EmpleadoApiController', $empleado->id);
 
