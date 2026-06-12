@@ -158,11 +158,10 @@ class OrdenTrabajoController extends Controller
 
         // Vehículo nuevo va primero, luego el resto por placa
         $vehiculos = Vehiculo::with('cliente.persona')
-            ->join('clientes', 'vehiculos.cliente_id', '=', 'clientes.id')
-            ->join('personas', 'clientes.persona_id', '=', 'personas.id')
-            ->orderByRaw($vehiculoId ? "CASE WHEN vehiculos.id = ? THEN 0 ELSE 1 END, vehiculos.placa" : "vehiculos.placa", $vehiculoId ? [$vehiculoId] : [])
-            ->select('vehiculos.*')
-            ->get();
+            ->get()
+            ->filter(fn($v) => $v->cliente && $v->cliente->persona)
+            ->sortBy(fn($v) => ($vehiculoId && $v->id == $vehiculoId) ? '' : $v->placa)
+            ->values();
 
         $empleados = Empleado::with('persona')->where('activo', true)->get();
         return view('mecanico.ordenes.create', compact('vehiculos', 'empleados', 'vehiculoId'));
