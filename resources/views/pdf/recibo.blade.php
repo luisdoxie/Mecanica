@@ -1,271 +1,255 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #1f2937; background: #fff; }
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #1f2937; background: #fff; }
 
-        /* ── Banda lateral amber ── */
-        .accent-bar { position: fixed; left: 0; top: 0; bottom: 0; width: 6px; background: #f59e0b; }
+/* ─── Header ─── */
+.header-table { width: 100%; border-collapse: collapse; background: #111827; }
+.header-logo-cell { padding: 22px 20px 22px 24px; vertical-align: middle; width: 60%; }
+.header-num-cell  { padding: 22px 24px 22px 10px; vertical-align: middle; text-align: right; }
 
-        /* ── Header ── */
-        .header { background: #111827; padding: 28px 36px 28px 42px; }
-        .header-inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo-box { display: flex; align-items: center; gap: 14px; }
-        .logo-icon { width: 48px; height: 48px; background: #f59e0b; border-radius: 10px; text-align: center; line-height: 48px; font-size: 16px; font-weight: bold; color: #111827; }
-        .logo-text h1 { font-size: 18px; font-weight: bold; color: #ffffff; letter-spacing: 0.02em; }
-        .logo-text p { font-size: 9px; color: #9ca3af; margin-top: 3px; }
-        .recibo-badge { text-align: right; }
-        .recibo-label { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
-        .recibo-num { font-size: 22px; font-weight: bold; color: #f59e0b; margin-top: 2px; }
-        .recibo-fecha { font-size: 9px; color: #9ca3af; margin-top: 4px; }
+.logo-icon { display: inline-block; background: #f59e0b; width: 44px; height: 44px; border-radius: 8px; text-align: center; vertical-align: middle; font-size: 15px; font-weight: bold; color: #111827; line-height: 44px; }
+.logo-name { display: inline-block; vertical-align: middle; padding-left: 10px; }
+.logo-name h1 { font-size: 17px; font-weight: bold; color: #ffffff; }
+.logo-name p  { font-size: 8px; color: #9ca3af; margin-top: 3px; }
 
-        /* ── Banda amber bajo header ── */
-        .amber-stripe { height: 4px; background: #f59e0b; margin-left: 6px; }
+.rec-label { font-size: 8px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; }
+.rec-num   { font-size: 20px; font-weight: bold; color: #f59e0b; margin-top: 2px; }
+.rec-fecha { font-size: 8px; color: #9ca3af; margin-top: 4px; }
 
-        /* ── Sello PAGADO ── */
-        .sello-wrap { padding: 12px 36px 0 42px; text-align: right; }
-        .sello { display: inline-block; border: 3px solid #16a34a; color: #16a34a; font-size: 15px; font-weight: bold; padding: 4px 18px; border-radius: 6px; letter-spacing: 0.15em; opacity: 0.85; }
+/* amber stripe */
+.amber-stripe { height: 4px; background: #f59e0b; }
 
-        /* ── Body ── */
-        .body { padding: 20px 36px 20px 42px; }
+/* ─── Sello PAGADO ─── */
+.sello-wrap { text-align: right; padding: 10px 24px 0 24px; }
+.sello { display: inline; border: 3px solid #16a34a; color: #16a34a; font-size: 13px; font-weight: bold; padding: 3px 14px; }
 
-        /* ── Secciones ── */
-        .section { margin-bottom: 20px; }
-        .section-title {
-            font-size: 9px; font-weight: bold; text-transform: uppercase;
-            color: #f59e0b; letter-spacing: 0.1em;
-            border-left: 3px solid #f59e0b; padding-left: 8px;
-            margin-bottom: 10px;
-        }
+/* ─── Cuerpo ─── */
+.body { padding: 16px 24px; }
 
-        /* ── Info grid ── */
-        .info-grid { display: flex; gap: 24px; }
-        .info-col { flex: 1; background: #f9fafb; border-radius: 8px; padding: 12px 14px; }
-        .info-row { margin-bottom: 7px; }
-        .info-row:last-child { margin-bottom: 0; }
-        .info-row .label { font-size: 8px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
-        .info-row .value { font-weight: bold; color: #111827; font-size: 11px; margin-top: 1px; }
+/* sección título */
+.sec-title { font-size: 8px; font-weight: bold; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.08em; border-left: 3px solid #f59e0b; padding-left: 7px; margin-bottom: 8px; margin-top: 16px; }
 
-        /* ── Tablas ── */
-        table { width: 100%; border-collapse: collapse; }
-        table thead tr { background: #111827; }
-        table th { padding: 8px 10px; text-align: left; font-size: 9px; font-weight: bold; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.05em; }
-        table th.text-right { text-align: right; }
-        table td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; font-size: 10px; color: #374151; }
-        table tbody tr:nth-child(even) td { background: #f9fafb; }
-        table tr:last-child td { border-bottom: none; }
-        .text-right { text-align: right; }
+/* info cards */
+.info-table { width: 100%; border-collapse: collapse; }
+.info-card { background: #f9fafb; padding: 10px 12px; vertical-align: top; width: 50%; }
+.info-label { font-size: 7.5px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
+.info-value { font-size: 10px; font-weight: bold; color: #111827; margin-top: 1px; margin-bottom: 6px; }
 
-        /* ── Totales ── */
-        .totales-wrap { margin-top: 16px; display: flex; justify-content: flex-end; }
-        .totales-box { width: 300px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
-        .totales-row { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #f3f4f6; font-size: 10px; }
-        .totales-row:last-child { border-bottom: none; }
-        .totales-row .t-label { color: #6b7280; }
-        .totales-row .t-value { font-weight: bold; color: #111827; }
-        .totales-total { background: #111827; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
-        .totales-total .t-label { color: #9ca3af; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
-        .totales-total .t-value { color: #f59e0b; font-size: 18px; font-weight: bold; }
+/* ─── Tablas de servicios / repuestos ─── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead tr { background: #111827; }
+.data-table th { padding: 7px 9px; font-size: 8px; font-weight: bold; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.04em; text-align: left; }
+.data-table th.r { text-align: right; }
+.data-table td { padding: 7px 9px; font-size: 9px; color: #374151; border-bottom: 1px solid #f3f4f6; }
+.data-table td.r { text-align: right; }
+.data-table tr.even td { background: #f9fafb; }
+.data-table tr:last-child td { border-bottom: none; }
 
-        /* ── Método de pago chip ── */
-        .metodo-chip { display: inline-block; background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; border-radius: 4px; padding: 2px 8px; font-size: 9px; font-weight: bold; }
+/* ─── Totales ─── */
+.totales-outer { width: 100%; border-collapse: collapse; margin-top: 14px; }
+.totales-outer td.spacer { width: 55%; }
+.totales-box-cell { width: 45%; vertical-align: top; }
+.totales-box { border: 1px solid #e5e7eb; }
+.totales-row { width: 100%; border-collapse: collapse; border-bottom: 1px solid #f3f4f6; }
+.totales-row td { padding: 7px 12px; font-size: 9.5px; }
+.totales-row td.tl { color: #6b7280; }
+.totales-row td.tv { font-weight: bold; color: #111827; text-align: right; }
+.totales-total-row { background: #111827; }
+.totales-total-row td { padding: 10px 12px; }
+.totales-total-row td.tl { color: #9ca3af; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+.totales-total-row td.tv { color: #f59e0b; font-size: 16px; font-weight: bold; text-align: right; }
+.metodo-chip { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; padding: 1px 7px; font-size: 8px; font-weight: bold; }
 
-        /* ── Firma ── */
-        .firma-section { margin-top: 28px; display: flex; justify-content: flex-end; }
-        .firma-box { text-align: center; width: 200px; }
-        .firma-space { height: 36px; }
-        .firma-line { border-top: 1px solid #374151; margin-bottom: 6px; }
-        .firma-nombre { font-weight: bold; font-size: 11px; color: #111827; }
-        .firma-cargo { font-size: 9px; color: #6b7280; margin-top: 2px; }
+/* ─── Firma ─── */
+.firma-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+.firma-cell { width: 65%; }
+.firma-right { width: 35%; text-align: center; }
+.firma-space { height: 32px; }
+.firma-line { border-top: 1px solid #374151; padding-top: 5px; }
+.firma-nombre { font-weight: bold; font-size: 10px; color: #111827; }
+.firma-cargo  { font-size: 8px; color: #6b7280; margin-top: 2px; }
 
-        /* ── Footer ── */
-        .footer { margin-top: 28px; margin-left: 6px; padding: 12px 36px; background: #f9fafb; border-top: 3px solid #f59e0b; }
-        .footer-inner { display: flex; justify-content: space-between; align-items: center; }
-        .footer-msg { font-size: 9px; color: #6b7280; }
-        .footer-valid { font-size: 8px; color: #9ca3af; text-align: right; }
-    </style>
+/* ─── Footer ─── */
+.footer { margin-top: 24px; background: #f9fafb; border-top: 3px solid #f59e0b; }
+.footer-table { width: 100%; border-collapse: collapse; }
+.footer-table td { padding: 10px 24px; font-size: 8px; }
+.footer-left  { color: #6b7280; }
+.footer-right { text-align: right; color: #9ca3af; font-size: 7.5px; }
+</style>
 </head>
 <body>
 
-<div class="accent-bar"></div>
-
-{{-- Header --}}
-<div class="header">
-    <div class="header-inner">
-        <div class="logo-box">
-            <div class="logo-icon">TE</div>
-            <div class="logo-text">
-                <h1>Taller Eusebio</h1>
-                <p>Tu dirección aquí &middot; Tel: 71056485</p>
-                <p>Lun&ndash;Vie 8am&ndash;6pm &nbsp;|&nbsp; Sab 8am&ndash;1pm</p>
-            </div>
-        </div>
-        <div class="recibo-badge">
-            <div class="recibo-label">Recibo de servicio</div>
-            <div class="recibo-num">{{ $numRecibo }}</div>
-            <div class="recibo-fecha">Emitido: {{ now()->format('d/m/Y H:i') }}</div>
-        </div>
-    </div>
-</div>
+{{-- ── Header ── --}}
+<table class="header-table">
+  <tr>
+    <td class="header-logo-cell">
+      <span class="logo-icon">TE</span>
+      <span class="logo-name">
+        <h1>Taller Eusebio</h1>
+        <p>Tu direcci&oacute;n aqu&iacute; &middot; Tel: 71056485</p>
+        <p>Lun&ndash;Vie 8am&ndash;6pm &nbsp;|&nbsp; Sab 8am&ndash;1pm</p>
+      </span>
+    </td>
+    <td class="header-num-cell">
+      <div class="rec-label">Recibo de servicio</div>
+      <div class="rec-num">{{ $numRecibo }}</div>
+      <div class="rec-fecha">Emitido: {{ now()->format('d/m/Y H:i') }}</div>
+    </td>
+  </tr>
+</table>
 <div class="amber-stripe"></div>
 
-{{-- Sello PAGADO --}}
+{{-- ── Sello PAGADO ── --}}
 @php $pagado = $orden->pagos->where('estado', 'PAGADO')->isNotEmpty(); @endphp
 @if($pagado)
-<div class="sello-wrap">
-    <span class="sello">&#10003; PAGADO</span>
-</div>
+<div class="sello-wrap"><span class="sello">&#10003; PAGADO</span></div>
 @endif
 
 <div class="body">
 
-    {{-- Cliente y vehículo --}}
-    <div class="section">
-        <div class="section-title">Cliente &amp; Vehículo</div>
-        <div class="info-grid">
-            <div class="info-col">
-                <div class="info-row">
-                    <div class="label">Cliente</div>
-                    <div class="value">{{ $orden->vehiculo->cliente->persona->nombre }} {{ $orden->vehiculo->cliente->persona->apellido }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="label">Cédula</div>
-                    <div class="value">{{ $orden->vehiculo->cliente->persona->ci }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="label">Teléfono</div>
-                    <div class="value">{{ $orden->vehiculo->cliente->persona->telefono ?? '—' }}</div>
-                </div>
-            </div>
-            <div class="info-col">
-                <div class="info-row">
-                    <div class="label">Vehículo</div>
-                    <div class="value">{{ $orden->vehiculo->marca }} {{ $orden->vehiculo->modelo }} {{ $orden->vehiculo->anio }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="label">Placa</div>
-                    <div class="value">{{ strtoupper($orden->vehiculo->placa) }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="label">Orden N°</div>
-                    <div class="value">#{{ $orden->id }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="label">Fecha ingreso</div>
-                    <div class="value">{{ \Carbon\Carbon::parse($orden->fecha_ingreso)->format('d/m/Y') }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
+  {{-- ── Cliente & Vehículo ── --}}
+  <div class="sec-title">Cliente &amp; Veh&iacute;culo</div>
+  <table class="info-table">
+    <tr>
+      <td class="info-card" style="padding-right:8px;">
+        <div class="info-label">Cliente</div>
+        <div class="info-value">{{ $orden->vehiculo->cliente->persona->nombre }} {{ $orden->vehiculo->cliente->persona->apellido }}</div>
+        <div class="info-label">C&eacute;dula</div>
+        <div class="info-value">{{ $orden->vehiculo->cliente->persona->ci }}</div>
+        <div class="info-label">Tel&eacute;fono</div>
+        <div class="info-value">{{ $orden->vehiculo->cliente->persona->telefono ?? '—' }}</div>
+      </td>
+      <td class="info-card" style="padding-left:8px;">
+        <div class="info-label">Veh&iacute;culo</div>
+        <div class="info-value">{{ $orden->vehiculo->marca }} {{ $orden->vehiculo->modelo }} {{ $orden->vehiculo->anio }}</div>
+        <div class="info-label">Placa</div>
+        <div class="info-value">{{ strtoupper($orden->vehiculo->placa) }}</div>
+        <div class="info-label">Orden N&deg; &nbsp;|&nbsp; Ingreso</div>
+        <div class="info-value">#{{ $orden->id }} &nbsp;&mdash;&nbsp; {{ \Carbon\Carbon::parse($orden->fecha_ingreso)->format('d/m/Y') }}</div>
+      </td>
+    </tr>
+  </table>
 
-    {{-- Servicios --}}
-    @if($orden->servicios->isNotEmpty())
-    <div class="section">
-        <div class="section-title">Servicios Realizados</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Descripción</th>
-                    <th>Observaciones</th>
-                    <th class="text-right">Precio</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($orden->servicios as $svc)
-                <tr>
-                    <td>{{ $svc->nombre }}</td>
-                    <td style="color:#9ca3af">{{ $svc->pivot->observaciones ?? '—' }}</td>
-                    <td class="text-right">Bs. {{ number_format($svc->pivot->precio_aplicado, 2) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    @endif
+  {{-- ── Servicios ── --}}
+  @if($orden->servicios->isNotEmpty())
+  <div class="sec-title">Servicios Realizados</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:50%">Descripci&oacute;n</th>
+        <th>Observaciones</th>
+        <th class="r" style="width:18%">Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($orden->servicios as $i => $svc)
+      <tr class="{{ $i % 2 === 1 ? 'even' : '' }}">
+        <td>{{ $svc->nombre }}</td>
+        <td style="color:#9ca3af">{{ $svc->pivot->observaciones ?? '—' }}</td>
+        <td class="r">Bs. {{ number_format($svc->pivot->precio_aplicado, 2) }}</td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
+  @endif
 
-    {{-- Repuestos --}}
-    @if($orden->repuestos->isNotEmpty())
-    <div class="section">
-        <div class="section-title">Repuestos Utilizados</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Repuesto</th>
-                    <th>Origen</th>
-                    <th>Calidad</th>
-                    <th class="text-right">Cant.</th>
-                    <th class="text-right">C/U</th>
-                    <th class="text-right">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($orden->repuestos as $rep)
-                <tr>
-                    <td>{{ $rep->nombre }}</td>
-                    <td>{{ $rep->origen }}</td>
-                    <td style="color:#9ca3af">{{ $rep->calidad_observada ?? '—' }}</td>
-                    <td class="text-right">{{ $rep->cantidad }}</td>
-                    <td class="text-right">Bs. {{ number_format($rep->costo, 2) }}</td>
-                    <td class="text-right">Bs. {{ number_format($rep->costo * $rep->cantidad, 2) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    @endif
+  {{-- ── Repuestos ── --}}
+  @if($orden->repuestos->isNotEmpty())
+  <div class="sec-title">Repuestos Utilizados</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Repuesto</th>
+        <th>Origen</th>
+        <th>Calidad</th>
+        <th class="r" style="width:8%">Cant.</th>
+        <th class="r" style="width:14%">C/U</th>
+        <th class="r" style="width:14%">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($orden->repuestos as $i => $rep)
+      <tr class="{{ $i % 2 === 1 ? 'even' : '' }}">
+        <td>{{ $rep->nombre }}</td>
+        <td>{{ $rep->origen }}</td>
+        <td style="color:#9ca3af">{{ $rep->calidad_observada ?? '—' }}</td>
+        <td class="r">{{ $rep->cantidad }}</td>
+        <td class="r">Bs. {{ number_format($rep->costo, 2) }}</td>
+        <td class="r">Bs. {{ number_format($rep->costo * $rep->cantidad, 2) }}</td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
+  @endif
 
-    {{-- Totales --}}
-    @php
-        $subtotalServicios = $orden->servicios->sum(fn($s) => $s->pivot->precio_aplicado);
-        $subtotalRepuestos = $orden->repuestos->sum(fn($r) => $r->costo * $r->cantidad);
-        $ultimoPago = $orden->pagos->sortByDesc('created_at')->first();
-    @endphp
+  {{-- ── Totales ── --}}
+  @php
+    $subtotalServicios = $orden->servicios->sum(fn($s) => $s->pivot->precio_aplicado);
+    $subtotalRepuestos = $orden->repuestos->sum(fn($r) => $r->costo * $r->cantidad);
+    $ultimoPago = $orden->pagos->sortByDesc('created_at')->first();
+    $total = $orden->costo_total ?? ($subtotalServicios + $subtotalRepuestos);
+  @endphp
 
-    <div class="totales-wrap">
+  <table class="totales-outer">
+    <tr>
+      <td class="spacer"></td>
+      <td class="totales-box-cell">
         <div class="totales-box">
-            <div class="totales-row">
-                <span class="t-label">Subtotal servicios</span>
-                <span class="t-value">Bs. {{ number_format($subtotalServicios, 2) }}</span>
-            </div>
-            <div class="totales-row">
-                <span class="t-label">Subtotal repuestos</span>
-                <span class="t-value">Bs. {{ number_format($subtotalRepuestos, 2) }}</span>
-            </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr class="totales-row">
+              <td class="tl">Subtotal servicios</td>
+              <td class="tv">Bs. {{ number_format($subtotalServicios, 2) }}</td>
+            </tr>
+            <tr class="totales-row">
+              <td class="tl">Subtotal repuestos</td>
+              <td class="tv">Bs. {{ number_format($subtotalRepuestos, 2) }}</td>
+            </tr>
             @if($ultimoPago)
-            <div class="totales-row">
-                <span class="t-label">Método de pago</span>
-                <span class="t-value"><span class="metodo-chip">{{ $ultimoPago->metodo_pago }}</span></span>
-            </div>
+            <tr class="totales-row">
+              <td class="tl">M&eacute;todo de pago</td>
+              <td class="tv"><span class="metodo-chip">{{ $ultimoPago->metodo_pago }}</span></td>
+            </tr>
             @endif
-            <div class="totales-total">
-                <span class="t-label">Total</span>
-                <span class="t-value">Bs. {{ number_format($orden->costo_total ?? ($subtotalServicios + $subtotalRepuestos), 2) }}</span>
-            </div>
+            <tr class="totales-total-row">
+              <td class="tl">Total</td>
+              <td class="tv">Bs. {{ number_format($total, 2) }}</td>
+            </tr>
+          </table>
         </div>
-    </div>
+      </td>
+    </tr>
+  </table>
 
-    {{-- Firma --}}
-    @if($orden->empleado)
-    <div class="firma-section">
-        <div class="firma-box">
-            <div class="firma-space"></div>
-            <div class="firma-line"></div>
-            <div class="firma-nombre">{{ $orden->empleado->persona->nombre }} {{ $orden->empleado->persona->apellido }}</div>
-            <div class="firma-cargo">{{ $orden->empleado->cargo }} &mdash; Mecánico Responsable</div>
+  {{-- ── Firma ── --}}
+  @if($orden->empleado)
+  <table class="firma-table">
+    <tr>
+      <td class="firma-cell"></td>
+      <td class="firma-right">
+        <div class="firma-space"></div>
+        <div class="firma-line">
+          <div class="firma-nombre">{{ $orden->empleado->persona->nombre }} {{ $orden->empleado->persona->apellido }}</div>
+          <div class="firma-cargo">{{ $orden->empleado->cargo }} &mdash; Mec&aacute;nico Responsable</div>
         </div>
-    </div>
-    @endif
+      </td>
+    </tr>
+  </table>
+  @endif
 
 </div>
 
-{{-- Footer --}}
+{{-- ── Footer ── --}}
 <div class="footer">
-    <div class="footer-inner">
-        <div class="footer-msg">Gracias por confiar en Taller Eusebio &mdash; 71056485</div>
-        <div class="footer-valid">Documento válido como comprobante de servicio<br>{{ now()->format('d/m/Y H:i') }}</div>
-    </div>
+  <table class="footer-table">
+    <tr>
+      <td class="footer-left">Gracias por confiar en Taller Eusebio &mdash; 71056485</td>
+      <td class="footer-right">Documento v&aacute;lido como comprobante de servicio<br>{{ now()->format('d/m/Y H:i') }}</td>
+    </tr>
+  </table>
 </div>
 
 </body>
