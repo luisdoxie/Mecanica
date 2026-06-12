@@ -15,10 +15,7 @@ class CobroApiController extends Controller
         $query = PagoOrden::with('orden.vehiculo')->latest()->limit(100);
 
         if ($user->rol === 'MECANICO') {
-            $empleado = \App\Models\Empleado::where('persona_id', $user->persona_id)->first();
-            if ($empleado) {
-                $query->whereHas('orden', fn($q) => $q->where('empleado_id', $empleado->id));
-            }
+            $query->where('registrado_por', $user->id);
         }
 
         $cobros = $query->get();
@@ -39,7 +36,8 @@ class CobroApiController extends Controller
     {
         $user     = $request->user();
         $query = OrdenTrabajo::with(['vehiculo.cliente.persona'])
-            ->whereIn('estado', ['LISTO', 'ENTREGADO']);
+            ->whereIn('estado', ['LISTO', 'ENTREGADO'])
+            ->whereDoesntHave('pagos', fn($q) => $q->where('estado', 'PAGADO'));
 
         if ($user->rol === 'MECANICO') {
             $empleado = \App\Models\Empleado::where('persona_id', $user->persona_id)->first();
